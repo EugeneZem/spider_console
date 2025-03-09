@@ -1,0 +1,8 @@
+*
+*/
+!Model/
+!CMakeLists.txt
+!*.cpp
+!*.h
+!.gitignore
+!readme.md
