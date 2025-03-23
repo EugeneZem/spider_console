@@ -10,24 +10,34 @@ set(Boost_USE_STATIC_LIBS ON)
 
 set(Boost_USE_MULTITHREADED ON)
 
-SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "D:/development/boost-build")
-SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "D:/development/boost-build/lib")
+#set(BOOST_ROOT D:\development\boost-build)
 
-FIND_PACKAGE(Boost)
-IF (Boost_FOUND)
-    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-    ADD_DEFINITIONS( "-DHAS_BOOST" )
-ENDIF()
+SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} D:\\Developments\\boost_1_87_0)
+SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} D:\\Developments\\boost_1_87_0\\stage\\lib)
 
-#find_package(Boost REQUIRED)
+#FIND_PACKAGE(Boost)
+#IF (Boost_FOUND)
+#    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+#    ADD_DEFINITIONS( "-DHAS_BOOST" )
+#ENDIF()
 
-#include_directories(${Boost_INCLUDE_DIRS})
+find_package(Boost REQUIRED)
+
+include_directories(${Boost_INCLUDE_DIRS})
 
 set(PostgreSQL_ADDITIONAL_VERSION "17")
 
 add_subdirectory(D:\\Projects\\libpqxx-7.9.2 pqxx-build)
 
-add_executable (Spider Spider.cpp Model/DataBase.h Model/DataBase.cpp)
+add_executable (Spider 
+        Spider.cpp 
+        Model/DataBase.h 
+        Model/DataBase.cpp 
+        Model/Indexer.h
+        Model/Indexer.cpp
+        Model/NetClient.h
+        Model/NetClient.cpp
+    )
 
 target_compile_features(Spider PRIVATE cxx_std_17)
 
