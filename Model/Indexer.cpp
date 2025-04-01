@@ -42,7 +42,7 @@ void Indexer::setIndexerData(const string& data)
 	begin = 0;
 	bool found = false;
 	do {
-	begin = page_.find(search_head, begin);
+		begin = page_.find(search_head, begin);
 
 		if (begin != std::string::npos)
 		{
@@ -55,8 +55,55 @@ void Indexer::setIndexerData(const string& data)
 	} while (found);
 
 	// Очистка от HTML тегов
+	bool tagDetected = false;
+	int posHeadTag = 0;
+	int posTailTag = 0;
+	for (int i = page_.length() - 1; i >= 0; --i)
+	{
+		if (page_.at(i) == '>')
+		{
+			tagDetected = true;
+			posTailTag = i;
+		}
+		if (tagDetected && page_.at(i) == '<')
+		{
+			posHeadTag = i;
+			page_.erase(posHeadTag, posTailTag - posHeadTag + 1);
+			tagDetected = false;
+		}
+	}
+
+	// Извлечение слов
+	regex w("([а-яА-Я]+)");
+	for (int i = 0; i < page_.length(); ++i)
+	{
+		if (!tagDetected && (page_.at(i) != ' ' && page_.at(i) != '/t'))
+		{
+			posHeadTag = i;
+			tagDetected = true;
+		}
+		if (tagDetected && (page_.at(i) == ' ' || page_.at(i) == '/t'))
+		{
+			posTailTag = i;
+			cout << '[' << page_.substr(posHeadTag, posTailTag - posHeadTag) << ']' << '\n';
+			string substr = page_.substr(posHeadTag, posTailTag - posHeadTag);
+			if (regex_match(substr, w))
+			{
+				if (substr.length() >= 3 && substr.length() <= 24)
+					worlds_.push_back(to_lower_copy(substr, std::locale{ "Russian" }));
+			}
+			tagDetected = false;
+		}
+	}
 
 
+
+	for (auto w : worlds_)
+	{
+		cout << w.length() << '\t' << '[' << w << ']' << '\n';
+
+		cout << tr.CheckWord(w);
+	}
 }
 
 

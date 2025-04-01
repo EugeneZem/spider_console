@@ -5,7 +5,6 @@ using namespace std;
 
 void Transactions::CreateTables()
 {
-	SQLQuery_.clear();
 	SQLQuery_ = 
 		"CREATE TABLE IF NOT EXISTS public.words ("
 		"id_word serial NOT NULL, "
@@ -13,7 +12,6 @@ void Transactions::CreateTables()
 		"CONSTRAINT words_pk PRIMARY KEY (id_word)); ";
 	if (connectForTransaction()) cout << error_;
 
-	SQLQuery_.clear();
 	SQLQuery_ =
 		"CREATE TABLE IF NOT EXISTS public.documents ("
 		"id_document serial NOT NULL, "
@@ -21,7 +19,6 @@ void Transactions::CreateTables()
 		"CONSTRAINT document_pk PRIMARY KEY (id_document)); ";
 	if (connectForTransaction()) cout << error_;
 
-	SQLQuery_.clear();
 	SQLQuery_ = 
 		"CREATE TABLE IF NOT EXISTS public.documents_words ("
 		"id_word int NOT NULL, "
@@ -76,7 +73,8 @@ int Transactions::connectForQuery()
 			" password=" + get<4>(connectData_));
 
 		pqxx::work transaction{ connect };
-		transaction.query(SQLQuery_);
+		
+		id_ = transaction.query_value<int>(SQLQuery_);
 	}
 	catch (const exception& e)
 	{
@@ -86,3 +84,20 @@ int Transactions::connectForQuery()
 
 	return 0;
 }
+
+int Transactions::CheckWord(string word)
+{
+	SQLQuery_ =
+		"SELECT id_word FROM words WHERE word='" + word + "';";
+
+	cout << SQLQuery_ << '\n';
+	if (connectForQuery())
+	{
+		cout << error_;
+		return 0;
+	}
+
+	cout << "SQL result " << id_ ;
+	return id_;
+}
+

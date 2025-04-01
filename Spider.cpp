@@ -31,7 +31,7 @@ using namespace std;
 
 int main()
 {
-	setlocale(LC_ALL, "Russian");
+	//setlocale(LC_ALL, "Russian");
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 	setvbuf(stdout, nullptr, _IOFBF, 1000);
@@ -42,7 +42,10 @@ int main()
 
     NetClient nc("80", 10);
 
-    string page = nc.getPage("fizika.ru", "/");
+
+//	string page = nc.getPage("www.aps-dsk.ru/", "/");
+
+	string page = nc.getPage("fizika.ru", "/");
 
 	Indexer ind;
 
